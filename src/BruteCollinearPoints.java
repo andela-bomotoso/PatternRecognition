@@ -11,20 +11,22 @@ public class BruteCollinearPoints {
     private ArrayList<LineSegment> linesegmentlist;
 
     public BruteCollinearPoints(Point[] points) {
-        checkNullity(points);
-        Arrays.sort(points);
+        if (points == null)
+            throw new IllegalArgumentException();
+        Point[] pointsCopy = Arrays.copyOf(points,points.length);
+        checkNullity(pointsCopy);
         numberOfSegments = 0;
         linesegmentlist = new ArrayList<>();
         Point[] tempPoints;
-        Arrays.sort(points);
-        for (int i = 0; i < points.length; i++) {
-            for (int j = i + 1; j < points.length; j++) {
-                for (int k = j + 1; k < points.length; k++) {
-                    for (int l = k + 1; l < points.length; l++) {
-                        tempPoints = new Point[]{points[i], points[j], points[k], points[l]};
+        int length = pointsCopy.length;
+        for (int i = 0; i < length; i++) {
+            for (int j = i + 1; j < length; j++) {
+                for (int k = j + 1; k < length; k++) {
+                    for (int l = k + 1; l < length; l++) {
+                        tempPoints = new Point[]{pointsCopy[i], pointsCopy[j], pointsCopy[k], pointsCopy[l]};
                         if (isCollinear(tempPoints)) {
                             numberOfSegments++;
-                            linesegmentlist.add(new LineSegment(points[i], points[l]));
+                            linesegmentlist.add(new LineSegment(pointsCopy[i], pointsCopy[l]));
                         }
                     }
                 }
@@ -56,10 +58,8 @@ public class BruteCollinearPoints {
     }
 
     private void checkNullity(Point[] points) {
-        if (points == null)
-            throw new IllegalArgumentException();
-        ArrayList<Point>pointList = new ArrayList(Arrays.asList(points));
-        if(pointList.contains(null))
+        ArrayList<Point> pointList = new ArrayList(Arrays.asList(points));
+        if (pointList.contains(null))
             throw new IllegalArgumentException();
         Arrays.sort(points);
         Point previousPoint = points[0];
@@ -74,7 +74,7 @@ public class BruteCollinearPoints {
 
     public static void main(String[] args) {
 
-         // read the n points from a file
+        // read the n points from a file
         In in = new In(args[0]);
         int n = in.readInt();
         Point[] points = new Point[n];

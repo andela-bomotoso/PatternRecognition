@@ -16,20 +16,25 @@ public class FastCollinearPoints {
     private ArrayList<LineSegment> segments = new ArrayList<>();
 
     public FastCollinearPoints(Point[] points) {
-
-        checkNullity(points);
+        if (points == null)
+            throw new IllegalArgumentException();
+        Point[] pointsCopy = Arrays.copyOf(points, points.length);
+        checkNullity(pointsCopy);
         numberOfSegments = 0;
-        double previousSlope = Double.POSITIVE_INFINITY;
-        for (int i = 0; i < points.length; i++) {
+        int length = pointsCopy.length;
+        double previousSlope = Integer.MIN_VALUE;
+        for (int i = 0; i < length; i++) {
             slopeOrders.clear();
-            Point p = points[i];
-            Arrays.sort(points, p.slopeOrder());
-            for (int j = 1; j < points.length; j++) {
-                Point q = points[j];
+            Point p = pointsCopy[i];
+            Arrays.sort(pointsCopy, p.slopeOrder());
+            for (int j = 0; j < length; j++) {
+                Point q = pointsCopy[j];
+                if (p.compareTo(q) == 0)
+                    continue;
                 double newSlope = p.slopeTo(q);
                 if (previousSlope == newSlope) {
                     slopeOrders.add(newSlope);
-                    pointsList.add(points[j]);
+                    pointsList.add(pointsCopy[j]);
                 } else {
                     if (slopeOrders.size() >= 3) {
                         pointsList.add(p);
@@ -43,14 +48,14 @@ public class FastCollinearPoints {
                         pointsList.clear();
                         previousSlope = newSlope;
                         slopeOrders.add(previousSlope);
-                        pointsList.add(points[j]);
+                        pointsList.add(pointsCopy[j]);
                         break;
-                    } else {
-                        slopeOrders.clear();
-                        pointsList.clear();
-                        slopeOrders.add(newSlope);
-                        pointsList.add(points[j]);
                     }
+                    slopeOrders.clear();
+                    pointsList.clear();
+                    previousSlope = newSlope;
+                    slopeOrders.add(previousSlope);
+                    pointsList.add(pointsCopy[j]);
                 }
                 previousSlope = newSlope;
             }
@@ -68,8 +73,6 @@ public class FastCollinearPoints {
 
 
     private void checkNullity(Point[] points) {
-        if (points == null)
-            throw new IllegalArgumentException();
         ArrayList<Point> pointlist = new ArrayList(Arrays.asList(points));
         if (pointlist.contains(null))
             throw new IllegalArgumentException();
