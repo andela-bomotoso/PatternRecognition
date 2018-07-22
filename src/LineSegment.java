@@ -62,10 +62,10 @@ public class LineSegment {
         LineSegment lineSegment2 = new LineSegment(q,r);
         System.out.println(lineSegment1);
         System.out.println(lineSegment2);
-        int i = lineSegment1.p.compareTo(lineSegment2.p);
-        System.out.println("i"+i);
-        System.out.println("point "+lineSegment1.p.equals(lineSegment2.p));
-        System.out.println(lineSegment1.p.compareTo(lineSegment2.p)==0);
+        System.out.println(lineSegment1.equals(lineSegment2));
+
+
+
 
     }
 

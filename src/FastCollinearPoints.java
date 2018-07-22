@@ -10,31 +10,37 @@ public class FastCollinearPoints {
 
 
     private int numberOfSegments;
-    private ArrayList<Double> slopeOrders = new ArrayList<>();
-    private ArrayList<Point> pointsList = new ArrayList<>();
     private ArrayList<LineSegment> segmentLists = new ArrayList<>();
     private ArrayList<LineSegment> segments = new ArrayList<>();
 
     public FastCollinearPoints(Point[] points) {
+
         if (points == null)
             throw new IllegalArgumentException();
         Point[] pointsCopy = Arrays.copyOf(points, points.length);
         checkNullity(pointsCopy);
+
         numberOfSegments = 0;
-        int length = pointsCopy.length;
         double previousSlope = Integer.MIN_VALUE;
-        for (int i = 0; i < length; i++) {
-            slopeOrders.clear();
-            Point p = pointsCopy[i];
+        for (Point p : points) {
+
+            ArrayList<Double> slopeOrders = new ArrayList<>();
+            ArrayList<Point> pointsList = new ArrayList<>();
+
             Arrays.sort(pointsCopy, p.slopeOrder());
-            for (int j = 0; j < length; j++) {
+            for (int j = 0; j < pointsCopy.length; j++) {
                 Point q = pointsCopy[j];
+
+                //skip equal points
                 if (p.compareTo(q) == 0)
                     continue;
                 double newSlope = p.slopeTo(q);
+
+                //check if slope are adjacent
                 if (previousSlope == newSlope) {
                     slopeOrders.add(newSlope);
                     pointsList.add(pointsCopy[j]);
+                    continue;
                 } else {
                     if (slopeOrders.size() >= 3) {
                         pointsList.add(p);
@@ -44,20 +50,24 @@ public class FastCollinearPoints {
                             numberOfSegments++;
                             segmentLists.add(currentSegment);
                         }
-                        slopeOrders.clear();
-                        pointsList.clear();
-                        previousSlope = newSlope;
-                        slopeOrders.add(previousSlope);
-                        pointsList.add(pointsCopy[j]);
-                        break;
                     }
-                    slopeOrders.clear();
-                    pointsList.clear();
-                    previousSlope = newSlope;
-                    slopeOrders.add(previousSlope);
-                    pointsList.add(pointsCopy[j]);
                 }
                 previousSlope = newSlope;
+                slopeOrders.clear();
+                pointsList.clear();
+                slopeOrders.add(previousSlope);
+                pointsList.add(q);
+
+            }
+            if (slopeOrders.size() >= 3) {
+                pointsList.add(p);
+                Collections.sort(pointsList);
+                LineSegment currentSegment = new LineSegment(pointsList.get(0), pointsList.get(pointsList.size() - 1));
+                if (isSegmentNew(segmentLists, currentSegment)) {
+                    numberOfSegments++;
+                    segmentLists.add(currentSegment);
+
+                }
             }
         }
     }// finds all line segments containing 4 or more points
@@ -73,9 +83,9 @@ public class FastCollinearPoints {
 
 
     private void checkNullity(Point[] points) {
-        ArrayList<Point> pointlist = new ArrayList(Arrays.asList(points));
-        if (pointlist.contains(null))
-            throw new IllegalArgumentException();
+        for (Point p : points)
+            if (p == null)
+                throw new IllegalArgumentException();
         Arrays.sort(points);
         Point previousPoint = points[0];
         for (int i = 1; i < points.length; i++) {
@@ -94,6 +104,7 @@ public class FastCollinearPoints {
             LineSegment currSegment = segmentOld.get(i);
             String pold = currSegment.toString().split("->")[0];
             String qold = currSegment.toString().split("->")[1];
+
             if (pnew.equals(pold) && qnew.equals(qold))
                 return false;
         }
