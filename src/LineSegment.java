@@ -2,6 +2,8 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.ArrayList;
+
 public class LineSegment {
     private final Point p;   // one endpoint of this line segment
     private final Point q;   // the other endpoint of this line segment
@@ -58,11 +60,15 @@ public class LineSegment {
         Point q = new Point(0,1000);
         Point r = new Point(0,2000);
         Point s = new Point(0,2000);
+        LineSegment[] segments = new LineSegment[2];
+        ArrayList<LineSegment>  arr = new ArrayList<>();
         LineSegment lineSegment1 = new LineSegment(p,s);
         LineSegment lineSegment2 = new LineSegment(q,r);
-        System.out.println(lineSegment1);
-        System.out.println(lineSegment2);
-        System.out.println(lineSegment1.equals(lineSegment2));
+        LineSegment lineSegment3 = new LineSegment(new Point(0,1000),new Point(0,200));
+        arr.add(lineSegment1);
+        arr.add(lineSegment2);
+        //arr.add(lineSegment3);
+        System.out.println(arr.contains(new LineSegment(new Point(0,1000),new Point(0,2000))));
 
 
 

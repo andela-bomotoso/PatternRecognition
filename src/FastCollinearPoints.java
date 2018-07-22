@@ -8,7 +8,6 @@ import java.util.Collections;
 
 public class FastCollinearPoints {
 
-
     private int numberOfSegments;
     private ArrayList<LineSegment> segmentLists = new ArrayList<>();
     private ArrayList<LineSegment> segments = new ArrayList<>();
@@ -23,50 +22,38 @@ public class FastCollinearPoints {
         numberOfSegments = 0;
         double previousSlope = Integer.MIN_VALUE;
         for (Point p : points) {
-
-            ArrayList<Double> slopeOrders = new ArrayList<>();
             ArrayList<Point> pointsList = new ArrayList<>();
 
             Arrays.sort(pointsCopy, p.slopeOrder());
-            for (int j = 0; j < pointsCopy.length; j++) {
+            for (int j = 1; j < pointsCopy.length; j++) {
                 Point q = pointsCopy[j];
 
                 //skip equal points
-                if (p.compareTo(q) == 0)
-                    continue;
                 double newSlope = p.slopeTo(q);
 
                 //check if slope are adjacent
                 if (previousSlope == newSlope) {
-                    slopeOrders.add(newSlope);
                     pointsList.add(pointsCopy[j]);
                     continue;
                 } else {
-                    if (slopeOrders.size() >= 3) {
+                    if (pointsList.size() >= 3) {
                         pointsList.add(p);
-                        Collections.sort(pointsList);
-                        LineSegment currentSegment = new LineSegment(pointsList.get(0), pointsList.get(pointsList.size() - 1));
-                        if (isSegmentNew(segmentLists, currentSegment)) {
+                        if (isSegmentNew(segmentLists, pointsList)) {
                             numberOfSegments++;
-                            segmentLists.add(currentSegment);
+                            segmentLists.add(getSegment(pointsList));
                         }
                     }
                 }
                 previousSlope = newSlope;
-                slopeOrders.clear();
                 pointsList.clear();
-                slopeOrders.add(previousSlope);
                 pointsList.add(q);
 
             }
-            if (slopeOrders.size() >= 3) {
+            if (pointsList.size() >= 3) {
                 pointsList.add(p);
-                Collections.sort(pointsList);
-                LineSegment currentSegment = new LineSegment(pointsList.get(0), pointsList.get(pointsList.size() - 1));
-                if (isSegmentNew(segmentLists, currentSegment)) {
+                if (isSegmentNew(segmentLists, pointsList)) {
                     numberOfSegments++;
-                    segmentLists.add(currentSegment);
-
+                    segmentLists.add(getSegment(pointsList));
                 }
             }
         }
@@ -96,11 +83,12 @@ public class FastCollinearPoints {
         }
     }
 
-    private boolean isSegmentNew(ArrayList<LineSegment> segmentOld, LineSegment segmentNew) {
-
+    private boolean isSegmentNew(ArrayList<LineSegment> segmentOld, ArrayList<Point> pointList) {
+        Collections.sort(pointList);
+        LineSegment currentSegment = new LineSegment(pointList.get(0), pointList.get(pointList.size() - 1));
+        String pnew = currentSegment.toString().split("->")[0];
+        String qnew = currentSegment.toString().split("->")[1];
         for (int i = 0; i < segmentOld.size(); i++) {
-            String pnew = segmentNew.toString().split("->")[0];
-            String qnew = segmentNew.toString().split("->")[1];
             LineSegment currSegment = segmentOld.get(i);
             String pold = currSegment.toString().split("->")[0];
             String qold = currSegment.toString().split("->")[1];
@@ -109,6 +97,10 @@ public class FastCollinearPoints {
                 return false;
         }
         return true;
+    }
+
+    private LineSegment getSegment(ArrayList<Point> pointList) {
+        return new LineSegment(pointList.get(0), pointList.get(pointList.size() - 1));
     }
 
 
