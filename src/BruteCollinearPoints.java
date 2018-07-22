@@ -13,7 +13,7 @@ public class BruteCollinearPoints {
     public BruteCollinearPoints(Point[] points) {
         if (points == null)
             throw new IllegalArgumentException();
-        Point[] pointsCopy = Arrays.copyOf(points,points.length);
+        Point[] pointsCopy = Arrays.copyOf(points, points.length);
         checkNullity(pointsCopy);
         numberOfSegments = 0;
         linesegmentlist = new ArrayList<>();

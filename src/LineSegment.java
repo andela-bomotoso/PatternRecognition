@@ -11,10 +11,10 @@ public class LineSegment {
     /**
      * Initializes a new line segment.
      *
-     * @param  p one endpoint
-     * @param  q the other endpoint
+     * @param p one endpoint
+     * @param q the other endpoint
      * @throws NullPointerException if either <tt>p</tt> or <tt>q</tt>
-     *         is <tt>null</tt>
+     *                              is <tt>null</tt>
      */
     public LineSegment(Point p, Point q) {
         if (p == null || q == null) {
@@ -56,22 +56,6 @@ public class LineSegment {
     }
 
     public static void main(String[] args) {
-        Point p = new Point(0,1000);
-        Point q = new Point(0,1000);
-        Point r = new Point(0,2000);
-        Point s = new Point(0,2000);
-        LineSegment[] segments = new LineSegment[2];
-        ArrayList<LineSegment>  arr = new ArrayList<>();
-        LineSegment lineSegment1 = new LineSegment(p,s);
-        LineSegment lineSegment2 = new LineSegment(q,r);
-        LineSegment lineSegment3 = new LineSegment(new Point(0,1000),new Point(0,200));
-        arr.add(lineSegment1);
-        arr.add(lineSegment2);
-        //arr.add(lineSegment3);
-        System.out.println(arr.contains(new LineSegment(new Point(0,1000),new Point(0,2000))));
-
-
-
 
     }
 

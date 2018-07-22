@@ -10,6 +10,8 @@ public class FastCollinearPoints {
 
     private int numberOfSegments;
     private ArrayList<LineSegment> segmentLists = new ArrayList<>();
+    private ArrayList<Point> segmentStartLists = new ArrayList<>();
+    private ArrayList<Point> segmentEndLists = new ArrayList<>();
     private ArrayList<LineSegment> segments = new ArrayList<>();
 
     public FastCollinearPoints(Point[] points) {
@@ -38,7 +40,7 @@ public class FastCollinearPoints {
                 } else {
                     if (pointsList.size() >= 3) {
                         pointsList.add(p);
-                        if (isSegmentNew(segmentLists, pointsList)) {
+                        if (isSegmentNew(segmentStartLists, segmentEndLists, pointsList)) {
                             numberOfSegments++;
                             segmentLists.add(getSegment(pointsList));
                         }
@@ -51,7 +53,7 @@ public class FastCollinearPoints {
             }
             if (pointsList.size() >= 3) {
                 pointsList.add(p);
-                if (isSegmentNew(segmentLists, pointsList)) {
+                if (isSegmentNew(segmentStartLists, segmentEndLists, pointsList)) {
                     numberOfSegments++;
                     segmentLists.add(getSegment(pointsList));
                 }
@@ -83,19 +85,19 @@ public class FastCollinearPoints {
         }
     }
 
-    private boolean isSegmentNew(ArrayList<LineSegment> segmentOld, ArrayList<Point> pointList) {
+    private boolean isSegmentNew(ArrayList<Point> segmentStart, ArrayList<Point> segmentEnd, ArrayList<Point> pointList) {
         Collections.sort(pointList);
-        LineSegment currentSegment = new LineSegment(pointList.get(0), pointList.get(pointList.size() - 1));
-        String pnew = currentSegment.toString().split("->")[0];
-        String qnew = currentSegment.toString().split("->")[1];
-        for (int i = 0; i < segmentOld.size(); i++) {
-            LineSegment currSegment = segmentOld.get(i);
-            String pold = currSegment.toString().split("->")[0];
-            String qold = currSegment.toString().split("->")[1];
-
-            if (pnew.equals(pold) && qnew.equals(qold))
+        Point p = pointList.get(0);
+        Point q = pointList.get(pointList.size() - 1);
+        for (int i = 0; i < segmentStart.size(); i++) {
+            Point currSegmentStart = segmentStart.get(i);
+            Point currSegmentEnd = segmentEnd.get(i);
+            if (p.compareTo(currSegmentStart) == 0 && q.compareTo(currSegmentEnd) == 0) {
                 return false;
+            }
         }
+        segmentStart.add(p);
+        segmentEnd.add(q);
         return true;
     }
 
