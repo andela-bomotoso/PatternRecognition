@@ -30,14 +30,14 @@ public class FastCollinearPoints {
 
                 //check if slope are adjacent
                 if (previousSlope == newSlope) {
-                    pointsList.add(pointsCopy[j]);
+                    pointsList.add(q);
                     continue;
                 } else {
                     if (pointsList.size() >= 3) {
                         pointsList.add(p);
                         Collections.sort(pointsList);
-                        if(p.compareTo(pointsList.get(0)) <= 0)
-                            segmentLists.add(getSegment(pointsList));
+                        if (p.compareTo(pointsList.get(0)) <= 0)
+                            segmentLists.add(new LineSegment(pointsList.get(0), pointsList.get(pointsList.size() - 1)));
                     }
                 }
                 previousSlope = newSlope;
@@ -48,8 +48,10 @@ public class FastCollinearPoints {
             if (pointsList.size() >= 3) {
                 pointsList.add(p);
                 Collections.sort(pointsList);
-                if(p.compareTo(pointsList.get(0)) <= 0)
-                    segmentLists.add(getSegment(pointsList));
+
+                if (p.compareTo(pointsList.get(0)) <= 0)
+                    segmentLists.add(new LineSegment(pointsList.get(0), pointsList.get(pointsList.size() - 1)));
+
 //
             }
         }
@@ -78,11 +80,6 @@ public class FastCollinearPoints {
             previousPoint = point;
         }
     }
-
-    private LineSegment getSegment(ArrayList<Point> pointList) {
-        return new LineSegment(pointList.get(0), pointList.get(pointList.size() - 1));
-    }
-
 
     public static void main(String[] args) {
 
