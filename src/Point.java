@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 import edu.princeton.cs.algs4.StdDraw;
@@ -86,43 +87,49 @@ public class Point implements Comparable<Point> {
             return 1;
     }
 
-    /**
-     * Compares two points by the slope they make with this point.
-     * The slope is defined as in the slopeTo() method.
-     *
-     * @return the Comparator that defines this ordering on points
-     */
-    public Comparator<Point> slopeOrder() {
-        /* YOUR CODE HERE */
-        return new Comparator<Point>() {
-            @Override
-            public int compare(Point point1, Point point2) {
-                return Double.compare(slopeTo(point1), slopeTo(point2));
-            }
-        };
+        /**
+         * Compares two points by the slope they make with this point.
+         * The slope is defined as in the slopeTo() method.
+         *
+         * @return the Comparator that defines this ordering on points
+         */
+        public Comparator<Point> slopeOrder () {
+            /* YOUR CODE HERE */
+            return new Comparator<Point>() {
+                @Override
+                public int compare(Point point1, Point point2) {
+                    return Double.compare(slopeTo(point1), slopeTo(point2));
+                }
+            };
+        }
+
+
+        /**
+         * Returns a string representation of this point.
+         * This method is provide for debugging;
+         * your program should not rely on the format of the string representation.
+         *
+         * @return a string representation of this point
+         */
+        public String toString () {
+            /* DO NOT MODIFY */
+            return "(" + x + ", " + y + ")";
+        }
+
+        /**
+         * Unit tests the Point data type.
+         */
+        public static void main (String[]args){
+            /* YOUR CODE HERE */
+            Point p = new Point(19000, 10000);
+
+            Point q = new Point(18000, 10000);
+
+            Point r = new Point(19000, 10000);
+            ArrayList<Point> tempPoints = new ArrayList<>();
+            tempPoints.add(p);
+            tempPoints.add(q);
+            System.out.println(tempPoints.contains(new Point(19000, 10000)));
+            //System.out.println("Points " + p.toString() + " " + q.toString() + "Slope " + p.slopeTo(q));
+        }
     }
-
-
-    /**
-     * Returns a string representation of this point.
-     * This method is provide for debugging;
-     * your program should not rely on the format of the string representation.
-     *
-     * @return a string representation of this point
-     */
-    public String toString() {
-        /* DO NOT MODIFY */
-        return "(" + x + ", " + y + ")";
-    }
-
-    /**
-     * Unit tests the Point data type.
-     */
-    public static void main(String[] args) {
-        /* YOUR CODE HERE */
-        Point p = new Point(19000, 10000);
-
-        Point q = new Point(18000, 10000);
-        System.out.println("Points " + p.toString() + " " + q.toString() + "Slope " + p.slopeTo(q));
-    }
-}

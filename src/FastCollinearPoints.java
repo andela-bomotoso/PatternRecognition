@@ -8,11 +8,7 @@ import java.util.Collections;
 
 public class FastCollinearPoints {
 
-    private int numberOfSegments;
     private ArrayList<LineSegment> segmentLists = new ArrayList<>();
-    private ArrayList<Point> segmentStartLists = new ArrayList<>();
-    private ArrayList<Point> segmentEndLists = new ArrayList<>();
-    private ArrayList<LineSegment> segments = new ArrayList<>();
 
     public FastCollinearPoints(Point[] points) {
 
@@ -21,7 +17,6 @@ public class FastCollinearPoints {
         Point[] pointsCopy = Arrays.copyOf(points, points.length);
         checkNullity(pointsCopy);
 
-        numberOfSegments = 0;
         double previousSlope = Integer.MIN_VALUE;
         for (Point p : points) {
             ArrayList<Point> pointsList = new ArrayList<>();
@@ -40,10 +35,9 @@ public class FastCollinearPoints {
                 } else {
                     if (pointsList.size() >= 3) {
                         pointsList.add(p);
-                        if (isSegmentNew(segmentStartLists, segmentEndLists, pointsList)) {
-                            numberOfSegments++;
+                        Collections.sort(pointsList);
+                        if(p.compareTo(pointsList.get(0)) <= 0)
                             segmentLists.add(getSegment(pointsList));
-                        }
                     }
                 }
                 previousSlope = newSlope;
@@ -53,21 +47,21 @@ public class FastCollinearPoints {
             }
             if (pointsList.size() >= 3) {
                 pointsList.add(p);
-                if (isSegmentNew(segmentStartLists, segmentEndLists, pointsList)) {
-                    numberOfSegments++;
+                Collections.sort(pointsList);
+                if(p.compareTo(pointsList.get(0)) <= 0)
                     segmentLists.add(getSegment(pointsList));
-                }
+//
             }
         }
     }// finds all line segments containing 4 or more points
 
     public int numberOfSegments() {
-        return numberOfSegments;
+        return segmentLists.size();
     }      // the number of line segments
 
     public LineSegment[] segments() {
 
-        return segmentLists.toArray(new LineSegment[segments.size()]);
+        return segmentLists.toArray(new LineSegment[segmentLists.size()]);
     }
 
 
@@ -83,22 +77,6 @@ public class FastCollinearPoints {
                 throw new IllegalArgumentException();
             previousPoint = point;
         }
-    }
-
-    private boolean isSegmentNew(ArrayList<Point> segmentStart, ArrayList<Point> segmentEnd, ArrayList<Point> pointList) {
-        Collections.sort(pointList);
-        Point p = pointList.get(0);
-        Point q = pointList.get(pointList.size() - 1);
-        for (int i = 0; i < segmentStart.size(); i++) {
-            Point currSegmentStart = segmentStart.get(i);
-            Point currSegmentEnd = segmentEnd.get(i);
-            if (p.compareTo(currSegmentStart) == 0 && q.compareTo(currSegmentEnd) == 0) {
-                return false;
-            }
-        }
-        segmentStart.add(p);
-        segmentEnd.add(q);
-        return true;
     }
 
     private LineSegment getSegment(ArrayList<Point> pointList) {
